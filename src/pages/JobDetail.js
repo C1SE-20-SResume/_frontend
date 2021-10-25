@@ -14,7 +14,7 @@ function JobDetail() {
       .then((res) => res.json())
       .then((data) => setJob(data.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [id, cookies.user]);
   console.log(job);
   return (
     <div>

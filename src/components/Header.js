@@ -10,12 +10,15 @@ function Header() {
 
   useEffect(() => {
     if (cookies.user) {
-      fetch(`http://_backend.win/api/login?api_token=${cookies.user}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        `${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
@@ -27,7 +30,7 @@ function Header() {
           setCookies("user", "");
         });
     }
-  }, [cookies]);
+  }, [cookies.user]);
   return (
     <header className="bg-[#333]">
       <div className="container">

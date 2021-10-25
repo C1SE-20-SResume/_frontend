@@ -2,11 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Header, Footer } from "./components";
 import { Login } from "./auth";
-import { Home, JobDetail } from "./pages";
+import { Home, JobDetail, Scan } from "./pages";
 import { useCookies } from "react-cookie";
 
 function App() {
   const [cookies] = useCookies(["user"]);
+
   return (
     <Router>
       <Header />
@@ -28,6 +29,9 @@ function App() {
         )}
         <Route path="/job-detail/:id">
           <JobDetail />
+        </Route>
+        <Route path="/scan">
+          <Scan />
         </Route>
       </Switch>
 

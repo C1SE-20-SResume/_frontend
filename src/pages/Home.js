@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function Home() {
   const [listCandidate, setListCandidate] = useState([]);
 
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies] = useCookies(["user"]);
 
   useEffect(() => {
     fetch(
@@ -14,7 +14,7 @@ function Home() {
       .then((response) => response.json())
       .then((data) => setListCandidate(data.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [cookies.user]);
 
   return (
     <section className="py-10">
@@ -40,7 +40,7 @@ function Home() {
                   <p className="text-sm">{item.job_place}</p>
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm">{item.job_salary}</p>
+                  <p className="text-sm">{item.salary}</p>
                 </div>
               </div>
             </Link>
