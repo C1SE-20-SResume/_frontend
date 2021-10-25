@@ -7,6 +7,7 @@ Read the `README.md` file of this repository to know how to use this project.
 
 (If not exist this file, create it and add the following lines)
 Change`REACT_APP_API_URL` to your `REACT_APP_API_URL` in localhost
+
 Example:
 `REACT_APP_API_URL=http://localhost:5000`
 
