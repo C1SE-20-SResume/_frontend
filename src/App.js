@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Header, Footer } from "./components";
 import { Login } from "./auth";
 import { Home, JobDetail, Scan } from "./pages";
 import { useCookies } from "react-cookie";
 
-function App() {
-  const [cookies] = useCookies(["user"]);
-
+function Candidate() {
   return (
     <Router>
       <Header />
@@ -38,6 +36,17 @@ function App() {
       <Footer />
     </Router>
   );
+}
+function Recuiter() {
+  // ...
+}
+function App() {
+  const [cookies] = useCookies(["user"]);
+  const [user, setUser] = useState({
+    role: 1,
+  });
+
+  return <>{user.role === 0 ? <Candidate /> : <Recuiter />}</>;
 }
 
 export default App;
