@@ -8,13 +8,26 @@ function Scan() {
     // get the file
     const file = document.getElementById("file").files[0];
     const formData = new FormData();
-    formData.append("file", file);
-    fetch(`${process.env.REACT_APP_API_URL}/scan`, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => {
-        console.log(res);
+    formData.append("cv_file", file);
+    // random 1 - 5
+    const random = Math.floor(Math.random() * 5) + 1;
+    // job_id
+    formData.append("job_id", random);
+    fetch(
+      `${process.env.REACT_APP_API_URL}/candidate/job/upload?api_token=${cookies.user}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        /*{
+          success: true or false,
+          cv_score: x/y,
+          cv_pass: 1 or 0
+        }*/
       })
       .catch((err) => {
         console.log(err);

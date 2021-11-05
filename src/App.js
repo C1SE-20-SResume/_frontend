@@ -5,7 +5,12 @@ import { Login } from "./auth";
 import { Home, JobDetail, Scan } from "./pages";
 import { useCookies } from "react-cookie";
 
-function Candidate() {
+function App() {
+  const [cookies] = useCookies(["user"]);
+  const [user, setUser] = useState({
+    role: 1,
+  });
+
   return (
     <Router>
       <Header />
@@ -36,17 +41,6 @@ function Candidate() {
       <Footer />
     </Router>
   );
-}
-function Recuiter() {
-  // ...
-}
-function App() {
-  const [cookies] = useCookies(["user"]);
-  const [user, setUser] = useState({
-    role: 1,
-  });
-
-  return <>{user.role === 0 ? <Candidate /> : <Recuiter />}</>;
 }
 
 export default App;
