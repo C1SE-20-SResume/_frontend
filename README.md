@@ -11,22 +11,22 @@ Change`REACT_APP_API_URL` to your `REACT_APP_API_URL` in localhost
 Example:
 `REACT_APP_API_URL=http://localhost:5000`
 
-Run command
+Run command (`yarn` or `npm`)
 
 ```bash
-yarn
+yarn or npm i
 ```
 
 ## See preview
 
 ```bash
-yarn start
+yarn start or npm run start
 ```
 
 ## Build production
 
 ```bash
-yarn build
+yarn build or npm run build
 ```
 
 ## Framework in project
