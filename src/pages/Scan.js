@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 function Scan() {
-  const [pdf, setPdf] = useState("");
   const [cookies, setCookie] = useCookies(["user"]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // get the file
