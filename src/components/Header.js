@@ -5,6 +5,22 @@ import Logo from "../assets/images/logo.png";
 import Avt from "../assets/images/avt_demo.jpg";
 
 function Header() {
+  const [cookies, setCookie] = useCookies(["user"]);
+
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    if (cookies.user) {
+      fetch(`${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data.user_info);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [cookies.user]);
+
+  console.log(user);
   return (
     <header>
       <div className="bg-[#1e1e1e] bg-opacity-10">
@@ -46,18 +62,24 @@ function Header() {
             </div>
           </div>
           <div className="max-w-full lg:max-w-[50%]">
-            <div className="inline-block py-3 px-2.5 border-r">
-              <Link to="/login">Login</Link>
-            </div>
-            <span>or</span>
-            <div className="inline-block py-3 px-2.5">
-              <Link
-                className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
-                to="/signup"
-              >
-                Signup
-              </Link>
-            </div>
+            {!cookies.user ? (
+              <>
+                <div className="inline-block py-3 px-2.5 border-r">
+                  <Link to="/login">Login</Link>
+                </div>
+                <span>or</span>
+                <div className="inline-block py-3 px-2.5">
+                  <Link
+                    className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
+                    to="/signup"
+                  >
+                    Signup
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <>{user.full_name}</>
+            )}
           </div>
         </div>
       </div>

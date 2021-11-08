@@ -38,7 +38,7 @@ yarn start or npm run start
 yarn build or npm run build
 ```
 
-## Framework in project
+## Framework and library in project
 
 - [ReactJs](https://reactjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
