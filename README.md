@@ -1,7 +1,10 @@
 # How to use?
 
-Go to project wev-server ([here](https://github.com/C1SE-20-SResume/web-server)) and clone this repository.
-Read the `README.md` file of this repository to know how to use this project.
+- Way 1:
+  Go to project wev-server ([here](https://github.com/C1SE-20-SResume/web-server)) and clone this repository.
+  Read the `README.md` file of this repository to know how to use this project.
+- Way 2:
+  Use API https://cvtojob.tk/api
 
 ## Config API_URL in evironment file
 
@@ -43,4 +46,4 @@ yarn build or npm run build
 
 ## API in project
 
-- https://cvtojob/api
+- https://cvtojob.tk/api
