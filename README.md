@@ -3,9 +3,15 @@
 Go to project wev-server ([here](https://github.com/C1SE-20-SResume/web-server)) and clone this repository.
 Read the `README.md` file of this repository to know how to use this project.
 
-## Config API_URL in evironment file [here](./.env)
+## Config API_URL in evironment file
 
-(If not exist this file, create it and add the following lines)
+Copy .env.example to .env
+(Copy - paste) or use command:
+
+```bash
+cp .env.example .env
+```
+
 Change`REACT_APP_API_URL` to your `REACT_APP_API_URL` in localhost
 
 Example:
@@ -34,3 +40,7 @@ yarn build or npm run build
 - [ReactJs](https://reactjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [React-Router](https://reacttraining.com/react-router/web/guides/quick-start)
+
+## API in project
+
+- https://cvtojob/api
