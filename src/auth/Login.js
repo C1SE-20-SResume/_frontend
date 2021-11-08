@@ -23,10 +23,11 @@ function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.status) {
+          console.log(data);
+          if (data.success) {
             setCookie("user", data.api_token);
           } else {
-            alert(data.message);
+            // alert(data.message);
           }
         })
         .catch((err) => {
@@ -36,7 +37,7 @@ function Login() {
   };
 
   return (
-    <div className="w-full h-full py-10 bg-gray-300">
+    <div className="w-full h-screen py-10 bg-gray-300 flex justify-center items-center">
       <div className="container">
         <div className="flex flex-col items-center justify-center h-full">
           <div className="w-full max-w-md">

@@ -1,45 +1,37 @@
 import React, { useState } from "react";
+import { Auth, Main } from "./layouts";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Header, Footer } from "./components";
-import { Login } from "./auth";
-import { Home, JobDetail, Scan } from "./pages";
 import { useCookies } from "react-cookie";
+import { Home } from "./pages";
+import { Login } from "./auth";
 
 function App() {
-  const [cookies] = useCookies(["user"]);
-  const [user, setUser] = useState({
-    role: 1,
-  });
+  const [cookies, setCookie] = useCookies(["user"]);
 
   return (
-    <Router>
-      <Header />
+    <>
+      <Router>
+        <Switch>
+          {cookies.user ?? (
+            <Route path="/(login|register)/">
+              <Auth>
+                <Switch>
+                  <Route exact path="/login" component={Login} />
+                </Switch>
+              </Auth>
+            </Route>
+          )}
 
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/about">
-          <Home />
-        </Route>
-        <Route path="/contact">
-          <Home />
-        </Route>
-        {!cookies.user && (
-          <Route path="/login">
-            <Login />
+          <Route>
+            <Main>
+              <Switch>
+                <Route exact path="/" component={Home} />
+              </Switch>
+            </Main>
           </Route>
-        )}
-        <Route path="/job-detail/:id">
-          <JobDetail />
-        </Route>
-        <Route path="/scan">
-          <Scan />
-        </Route>
-      </Switch>
-
-      <Footer />
-    </Router>
+        </Switch>
+      </Router>
+    </>
   );
 }
 

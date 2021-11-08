@@ -5,146 +5,59 @@ import Logo from "../assets/images/logo.png";
 import Avt from "../assets/images/avt_demo.jpg";
 
 function Header() {
-  const [user, setUser] = useState();
-  const [cookies, setCookies] = useCookies(["user"]);
-
-  useEffect(() => {
-    if (cookies.user) {
-      fetch(
-        `${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setUser(data.user);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          setCookies("user", "");
-        });
-    }
-  }, [cookies.user]);
   return (
-    <header className="bg-[#333]">
-      <div className="container">
-        <div className="flex items-center justify-between">
-          <div className="flex-shrink lg:max-w-[50px] m-2 text-white max-w-[35px] mr-4">
-            <Link to="/" className="flex items-center">
-              <img src={Logo} alt="Logo" />
-            </Link>
+    <header>
+      <div className="bg-[#1e1e1e] bg-opacity-10">
+        <div className="container flex justify-between items-center flex-wrap text-sm">
+          <div className="max-w-full lg:max-w-[50%] flex">
+            <div className="py-5 px-2.5 inline-flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                />
+              </svg>
+              (+84) 344 786 376
+            </div>
+            <div className="inline-flex items-center py-5 px-2.5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+              <a href="mailto:thang115tp@gmail.com">thang115tp@gmail.com</a>
+            </div>
           </div>
-          <nav className="text-white lg:block hidden">
-            <ul className="flex items-center">
-              <li className="mx-2 capitalize">
-                <NavLink
-                  exact
-                  to="/"
-                  className="py-2 px-4 hover:text-prihover"
-                  activeClassName="text-prihover"
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li className="mx-2 capitalize">
-                <NavLink
-                  exact
-                  to="/about"
-                  className="py-2 px-4 hover:text-prihover"
-                  activeClassName="text-prihover"
-                >
-                  About us
-                </NavLink>
-              </li>
-              <li className="mx-2 capitalize">
-                <NavLink
-                  exact
-                  to="/contact"
-                  className="py-2 px-4 hover:text-prihover"
-                  activeClassName="text-prihover"
-                >
-                  Contact us
-                </NavLink>
-              </li>
-              <li className="mx-2">
-                <form className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="py-1 px-3 text-black rounded-md bg-gray-300 focus:scale-110 transition-all duration-500"
-                  />
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6 absolute right-0 top-1/2 -translate-y-1/2 text-black cursor-pointer hover:text-prihover transition-colors duration-300 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </form>
-              </li>
-            </ul>
-          </nav>
-          {user ? (
-            <div className="flex-shrink">
-              <div className="flex items-center">
-                <div className="mr-3">
-                  <p className="text-sm leading-5 font-medium text-white">
-                    {user.full_name}
-                  </p>
-                </div>
-                <div className="flex-shrink-0">
-                  <img
-                    className="rounded-full h-8 w-8"
-                    src={Avt}
-                    alt="Avatar"
-                  />
-                </div>
-              </div>
+          <div className="max-w-full lg:max-w-[50%]">
+            <div className="inline-block py-3 px-2.5 border-r">
+              <Link to="/login">Login</Link>
             </div>
-          ) : (
-            <div className="flex-shrink text-white">
-              <NavLink to="/login">
-                <button className="py-1 px-6 border border-gray-200 rounded-md hover:bg-prihover hover:border-prihover">
-                  Login
-                </button>
-              </NavLink>
-              <span className="ml-4">or</span>
-              <NavLink to="/register">
-                <button className="py-1 px-4  hover:text-prihover">
-                  Sign up
-                </button>
-              </NavLink>
+            <span>or</span>
+            <div className="inline-block py-3 px-2.5">
+              <Link
+                className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
+                to="/signup"
+              >
+                Signup
+              </Link>
             </div>
-          )}
-
-          <div className="text-white lg:hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
           </div>
         </div>
       </div>
