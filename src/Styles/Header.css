@@ -1,0 +1,3 @@
+.toggle_profile:hover .profile {
+  @apply visible;
+}

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
-import Avt from "../assets/images/avt_demo.jpg";
+import "../Styles/Header.css";
 
 function Header() {
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies, setCookie, removeCookies] = useCookies(["token"]);
+
+  const [listMenu, setListMenu] = useState(["Home", "Job", "Contact"]);
 
   const [user, setUser] = useState({});
 
@@ -14,13 +16,33 @@ function Header() {
       fetch(`${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`)
         .then((res) => res.json())
         .then((data) => {
-          setUser(data.user_info);
+          if (data.success) {
+            setUser(data.user_info);
+            if (data.role_level === 0) {
+              setListMenu(["Home", "Job", "Quiz Test", "Contact"]);
+            } else if (data.role_level === 1) {
+              setListMenu(["Home", "Job", "Contact", "For Recruiter"]);
+            }
+          }
         })
         .catch((err) => console.log(err));
     }
   }, [cookies.user]);
 
-  console.log(user);
+  const handleLogout = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/logout?api_token=${cookies.user}`, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          removeCookies("user");
+          window.location.reload();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <header>
       <div className="bg-[#1e1e1e] bg-opacity-10">
@@ -41,7 +63,7 @@ function Header() {
                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                 />
               </svg>
-              (+84) 344 786 376
+              (+84) 123 456 789
             </div>
             <div className="inline-flex items-center py-5 px-2.5">
               <svg
@@ -58,28 +80,114 @@ function Header() {
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <a href="mailto:thang115tp@gmail.com">thang115tp@gmail.com</a>
+              <a href="mailto:support@cvtojob.tk">support@cvtojob.tk</a>
             </div>
           </div>
-          <div className="max-w-full lg:max-w-[50%]">
-            {!cookies.user ? (
-              <>
-                <div className="inline-block py-3 px-2.5 border-r">
-                  <Link to="/login">Login</Link>
+        </div>
+      </div>
+      <div className="top-0 left-0 right-0 my-3">
+        <div className="container">
+          <div className="flex items-center justify-between">
+            <div>
+              <Link to="/">
+                <img
+                  src={Logo}
+                  alt="logo"
+                  className="max-w-[200px] h-auto mr-2"
+                />
+              </Link>
+            </div>
+            <nav className="">
+              <ul className="w-full flex items-center justify-center">
+                {listMenu.length > 0 &&
+                  listMenu.map((item, index) => (
+                    <li
+                      key={index}
+                      className="inline-block py-3 px-2.5 mx-2  transition-all duration-150"
+                    >
+                      <NavLink
+                        className="hover:text-prihover"
+                        activeClassName="text-prihover"
+                        to={`/${item.replace(/\s/g, "-").toLowerCase()}`}
+                      >
+                        {item}
+                      </NavLink>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
+            <div className="max-w-full lg:max-w-[50%]">
+              {!cookies.user ? (
+                <>
+                  <div className="inline-block py-3 px-2.5 border-r">
+                    <Link to="/login">Login</Link>
+                  </div>
+                  <span>or</span>
+                  <div className="inline-block py-3 px-2.5">
+                    <Link
+                      className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
+                      to="/signup"
+                    >
+                      Signup
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <div className=" ">
+                  <div className="flex items-center justify-between relative toggle_profile">
+                    <span>{user.full_name}</span>
+                    <img
+                      // random img avatar
+                      src="https://picsum.photos/200"
+                      alt={user.full_name}
+                      className="rounded-full ml-2 max-w-[50px] cursor-pointer"
+                    />
+                    <div className="absolute right-0 top-full invisible profile">
+                      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div className="flex items-center px-6 py-3 hover:bg-gray-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          <span className="ml-2">
+                            <Link to="/profile">Profile</Link>
+                          </span>
+                        </div>
+                        <div className="flex items-center px-6 py-3 hover:bg-gray-400">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            />
+                          </svg>
+                          <span className="ml-2">
+                            <button onClick={handleLogout}>Logout</button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span>or</span>
-                <div className="inline-block py-3 px-2.5">
-                  <Link
-                    className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
-                    to="/signup"
-                  >
-                    Signup
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <>{user.full_name}</>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

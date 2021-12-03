@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Auth, Main } from "./layouts";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { Home } from "./pages";
+import { Home, ListJob, JobDetail, QuizTest, Profile } from "./pages";
 import { Login } from "./auth";
 
 function App() {
-  const [cookies, setCookie] = useCookies(["user"]);
+  const [cookies] = useCookies(["user"]);
 
   return (
     <>
@@ -26,6 +26,11 @@ function App() {
             <Main>
               <Switch>
                 <Route exact path="/" component={Home} />
+                <Route exact path="/job/:id" component={JobDetail} />
+                <Route exact path="/job" component={ListJob} />
+                <Route exact path="/quiz-test" component={QuizTest} />
+                <Route exact path="/profile" component={Profile} />
+                <Route exact component={Home} />
               </Switch>
             </Main>
           </Route>

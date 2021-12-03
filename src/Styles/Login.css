@@ -1,0 +1,6 @@
+.invalid > input {
+  @apply border-red-500;
+}
+.invalid > span.form-message {
+  @apply text-red-500;
+}

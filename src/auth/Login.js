@@ -1,8 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { Validator } from "../Store";
+import "../Styles/Login.css";
 
 function Login() {
   const [cookies, setCookie] = useCookies(["user"]);
+
+  useEffect(() => {
+    Validator({
+      form: "#formLogin",
+      formGroupSelector: ".form-group",
+      errorSelector: ".form-message",
+      rules: [
+        Validator.isRequired("#email"),
+        Validator.isRequired("#password"),
+        Validator.isEmail("#email"),
+        Validator.minLength("#password", 6),
+      ],
+      classError: "invalid",
+      onSubmit: (e) => {},
+    });
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,6 +44,7 @@ function Login() {
           console.log(data);
           if (data.success) {
             setCookie("user", data.api_token);
+            window.location.href = "/";
           } else {
             // alert(data.message);
           }
@@ -45,8 +64,8 @@ function Login() {
               <div className="mb-4">
                 <h1 className="text-center text-2xl font-bold">Login</h1>
               </div>
-              <form className="" onSubmit={handleSubmit}>
-                <div className="mb-4">
+              <form className="" onSubmit={handleSubmit} id="formLogin">
+                <div className="mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Email
                   </label>
@@ -56,8 +75,9 @@ function Login() {
                     type="email"
                     placeholder="Email"
                   />
+                  <span className="form-message"></span>
                 </div>
-                <div className="mb-4">
+                <div className="mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Password
                   </label>
@@ -67,6 +87,7 @@ function Login() {
                     type="password"
                     placeholder="Password"
                   />
+                  <span className="form-message"></span>
                 </div>
                 <div className="flex items-center justify-between">
                   <button
@@ -77,7 +98,7 @@ function Login() {
                   </button>
                   <a
                     className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                    href="#"
+                    href="/"
                   >
                     Forgot Password?
                   </a>

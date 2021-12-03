@@ -1,0 +1,120 @@
+import React, { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+
+function QuizPer({ person, aptitudeScore }) {
+  console.log(aptitudeScore);
+  const [cookies] = useCookies(["user"]);
+
+  const [quiz, setQuiz] = useState([]);
+  const [sumType, setSumType] = useState([]);
+
+  useEffect(() => {
+    for (let key in person) {
+      setQuiz((prev) => {
+        return [
+          ...prev,
+          ...person[key].map((item) => ({
+            question: item.ques_content,
+            ques_id: item.ques_id,
+            type_id: item.type_id,
+          })),
+        ];
+      });
+    }
+  }, [person]);
+  useEffect(() => {
+    setSumType(
+      quiz.reduce((rv, x) => {
+        (rv[x.type_id] = rv[x.type_id] || []).push(x);
+        return rv;
+      }, {})
+    );
+  }, [quiz]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let score = [];
+
+    for (let key in sumType) {
+      score.push({
+        type_id: key,
+        score: sumType[key].reduce((rv, x) => {
+          return rv + x.score;
+        }, 0),
+      });
+    }
+
+    fetch(
+      `${process.env.REACT_APP_API_URL}/candidate/quiz/result?api_token=${cookies.user}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ques_result: [...score, ...aptitudeScore],
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          console.log(data.message);
+        } else {
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mx-auto">
+        To take the Big Five personality assessment, rate each statement
+        according to how well it describes you. Base your ratings on how you
+        really are, not how you would like to be.
+      </div>
+      <div className="mb-4">
+        <table className="mb-2 table-auto mt-4 rounded-lg">
+          <thead className="text-base bg-[#c4933b] px-7 py-4  uppercase ">
+            <tr>
+              <th className="text-center">Question</th>
+              <th className="text-center">INACCURATE</th>
+              <th className="text-center"></th>
+              <th className="text-center">NEUTRAL</th>
+              <th className="text-center"></th>
+              <th className="text-center">ACCURATE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {quiz.map((item, index) => (
+              <tr key={index}>
+                <td className="text-left">{item.question}</td>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <td key={i} className="text-center">
+                    <input
+                      type="radio"
+                      value={i}
+                      name={`ques_id_${item.ques_id}`}
+                      attr-type={item.type_id}
+                      onChange={(e) => {
+                        item.score = parseInt(e.target.value);
+                      }}
+                      {...(i === 1 && { required: true })}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button className="block border border-[#616A94] rounded-2xl px-8 py-2 text-base outline-none select-none mt-4 cursor-pointer hover:bg-[#616A94] mx-auto transition duration-300">
+        Submit
+      </button>
+    </form>
+  );
+}
+
+export default QuizPer;
