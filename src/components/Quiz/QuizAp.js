@@ -67,7 +67,7 @@ function QuizAp() {
               });
             }
             count++;
-            if (count === 15) break;
+            if (count === 14) break;
           }
         } else {
           setMess(res.message);
