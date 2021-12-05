@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
+import Summary from "./Summary";
+
 function QuizPer({ person, aptitudeScore }) {
-  console.log(aptitudeScore);
   const [cookies] = useCookies(["user"]);
 
   const [quiz, setQuiz] = useState([]);
   const [sumType, setSumType] = useState([]);
+
+  const [result, setResult] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     for (let key in person) {
@@ -59,7 +63,8 @@ function QuizPer({ person, aptitudeScore }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          console.log(data.message);
+          setMessage(data.message);
+          setResult(...data.ques_result);
         } else {
         }
       })
@@ -68,52 +73,60 @@ function QuizPer({ person, aptitudeScore }) {
       });
   };
 
+  console.log(message);
+
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mx-auto">
-        To take the Big Five personality assessment, rate each statement
-        according to how well it describes you. Base your ratings on how you
-        really are, not how you would like to be.
-      </div>
-      <div className="mb-4">
-        <table className="mb-2 table-auto mt-4 rounded-lg">
-          <thead className="text-base bg-[#c4933b] px-7 py-4  uppercase ">
-            <tr>
-              <th className="text-center">Question</th>
-              <th className="text-center">INACCURATE</th>
-              <th className="text-center"></th>
-              <th className="text-center">NEUTRAL</th>
-              <th className="text-center"></th>
-              <th className="text-center">ACCURATE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {quiz.map((item, index) => (
-              <tr key={index}>
-                <td className="text-left">{item.question}</td>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <td key={i} className="text-center">
-                    <input
-                      type="radio"
-                      value={i}
-                      name={`ques_id_${item.ques_id}`}
-                      attr-type={item.type_id}
-                      onChange={(e) => {
-                        item.score = parseInt(e.target.value);
-                      }}
-                      {...(i === 1 && { required: true })}
-                    />
-                  </td>
+    <>
+      {message === "" ? (
+        <form onSubmit={handleSubmit}>
+          <div className="mx-auto">
+            To take the Big Five personality assessment, rate each statement
+            according to how well it describes you. Base your ratings on how you
+            really are, not how you would like to be.
+          </div>
+          <div className="mb-4">
+            <table className="mb-2 table-auto mt-4 rounded-lg">
+              <thead className="text-base bg-[#c4933b] px-7 py-4  uppercase ">
+                <tr>
+                  <th className="text-center">Question</th>
+                  <th className="text-center">INACCURATE</th>
+                  <th className="text-center"></th>
+                  <th className="text-center">NEUTRAL</th>
+                  <th className="text-center"></th>
+                  <th className="text-center">ACCURATE</th>
+                </tr>
+              </thead>
+              <tbody>
+                {quiz.map((item, index) => (
+                  <tr key={index}>
+                    <td className="text-left">{item.question}</td>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <td key={i} className="text-center">
+                        <input
+                          type="radio"
+                          value={i}
+                          name={`ques_id_${item.ques_id}`}
+                          attr-type={item.type_id}
+                          onChange={(e) => {
+                            item.score = parseInt(e.target.value);
+                          }}
+                          {...(i === 1 && { required: true })}
+                        />
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <button className="block border border-[#616A94] rounded-2xl px-8 py-2 text-base outline-none select-none mt-4 cursor-pointer hover:bg-[#616A94] mx-auto transition duration-300">
-        Submit
-      </button>
-    </form>
+              </tbody>
+            </table>
+          </div>
+          <button className="block border border-[#616A94] rounded-2xl px-8 py-2 text-base outline-none select-none mt-4 cursor-pointer hover:bg-[#616A94] mx-auto transition duration-300">
+            Submit
+          </button>
+        </form>
+      ) : (
+        <Summary message={message} result={result} />
+      )}
+    </>
   );
 }
 

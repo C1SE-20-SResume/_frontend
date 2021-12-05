@@ -19,7 +19,6 @@ function QuizAp() {
 
   const pickAnswers = (e, type_id) => {
     let userAnswer = e.target.outerText;
-    console.log(type_id);
     setScore((prev) => [
       ...prev,
       {
@@ -29,8 +28,6 @@ function QuizAp() {
     ]);
 
     setNumber(number + 1);
-
-    console.log(score);
   };
 
   useEffect(() => {
@@ -39,7 +36,6 @@ function QuizAp() {
     )
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         if (res.success) {
           setPerson({ ...res.personality });
           let listQuiz = { ...res.aptitude };
