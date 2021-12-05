@@ -2,6 +2,7 @@ import React from "react";
 
 function Start({ setStart }) {
   const startQuiz = () => setStart(true);
+
   return (
     <div className="max-w-[calc(800px+1.75rem)] my-0 mx-auto pt-8">
       <div>

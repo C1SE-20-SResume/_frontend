@@ -119,13 +119,15 @@ function Header() {
             <div className="max-w-full lg:max-w-[50%]">
               {!cookies.user ? (
                 <>
-                  <div className="inline-block py-3 px-2.5 border-r">
-                    <Link to="/login">Login</Link>
+                  <div className="inline-block py-3 px-2.5">
+                    <Link to="/login" className="hover:text-prihover">
+                      Login
+                    </Link>
                   </div>
                   <span>or</span>
                   <div className="inline-block py-3 px-2.5">
                     <Link
-                      className="border border-[#2f55d4] rounded-md py-2 px-3 bg-[#2f55d4] text-white hover:bg-white hover:text-black"
+                      className="border border-prihover rounded-md py-2 px-3 bg-prihover text-white hover:bg-white hover:text-black"
                       to="/signup"
                     >
                       Signup

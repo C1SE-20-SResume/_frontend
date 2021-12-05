@@ -39,6 +39,7 @@ function QuizAp() {
     )
       .then((res) => res.json())
       .then((res) => {
+        console.log(res);
         if (res.success) {
           setPerson({ ...res.personality });
           let listQuiz = { ...res.aptitude };

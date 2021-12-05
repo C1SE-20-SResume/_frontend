@@ -9,7 +9,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        prihover: "#d87e2c",
+        prihover: "#2f55d4",
       },
     },
   },

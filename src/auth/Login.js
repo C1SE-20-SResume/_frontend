@@ -41,7 +41,6 @@ function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           if (data.success) {
             setCookie("user", data.api_token);
             window.location.href = "/";

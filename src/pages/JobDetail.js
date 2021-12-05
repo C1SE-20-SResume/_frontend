@@ -217,9 +217,9 @@ function JobDetail() {
       </section>
       {show && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="z-20 bg-white rounded-lg shadow-xl p-5 min-w-[300px]">
+          <div className="z-20 bg-white rounded-lg shadow-xl p-5 min-w-[300px] relative">
             <h3 className="text-center">
-              <span className="font-bold">Apply</span>
+              <span className="font-bold text-lg">Apply</span>
             </h3>
             <div className="mt-4">
               <div className="mb-4">
@@ -238,6 +238,25 @@ function JobDetail() {
                 </button>
               </div>
             </div>
+            <button
+              className="absolute top-0 right-0 m-2 hover:text-prihover"
+              onClick={() => setShow(false)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       )}
