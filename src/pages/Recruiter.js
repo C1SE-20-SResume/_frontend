@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ListJob, AddJob } from "../components";
+import { ListJob, AddJob, EditJob } from "../components";
 
 function Recruiter({ userInfo, title }) {
   const [user, setUser] = useState({
@@ -7,7 +7,7 @@ function Recruiter({ userInfo, title }) {
     role: userInfo.role_level,
     user_id: userInfo.user_id,
   });
-  console.log(user);
+
   useEffect(() => {
     if (userInfo.user_info) {
       setUser({
@@ -29,6 +29,8 @@ function Recruiter({ userInfo, title }) {
         return <ListJob userInfo={user} />;
       case "add-job":
         return <AddJob userInfo={user} />;
+      case "edit-job":
+        return <EditJob />;
       default:
         return <ListJob userInfo={user} />;
     }

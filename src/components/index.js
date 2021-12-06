@@ -8,6 +8,7 @@ import PasswordTab from "./Profile/PasswordTab";
 import Summary from "./Quiz/Summary";
 import ListJob from "./Recruiter/ListJob";
 import AddJob from "./Recruiter/AddJob";
+import EditJob from "./Recruiter/EditJob";
 
 export {
   Header,
@@ -20,4 +21,5 @@ export {
   Summary,
   ListJob,
   AddJob,
+  EditJob,
 };

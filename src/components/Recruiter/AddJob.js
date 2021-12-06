@@ -1,59 +1,35 @@
 import React, { useState, useEffect } from "react";
-
-function AddKeyword({ renderElement }) {
-  return (
-    <div className="col-span-2">
-      <div className="flex items-end justify-between">
-        <div className="w-5/12 mr-2">
-          <label className="block text-sm font-bold mb-2">Keyword</label>
-          <select className="w-full p-2 rounded-md">
-            <option>Select Keyword</option>
-            <option>Keyword 1</option>
-            <option>Keyword 2</option>
-            <option>Keyword 3</option>
-            <option>Keyword 4</option>
-            <option>Keyword 5</option>
-          </select>
-        </div>
-        <div className="w-5/12 ml-2">
-          <label className="block text-sm font-bold mb-2">Weight</label>
-          <select className="w-full p-2 rounded-md">
-            <option>Select Weight</option>
-            <option>Weight 1</option>
-            <option>Weight 2</option>
-            <option>Weight 3</option>
-            <option>Weight 4</option>
-            <option>Weight 5</option>
-          </select>
-        </div>
-        <div className="w-2/12 ml-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            onClick={renderElement}
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useCookies } from "react-cookie";
 
 function AddJob({ userInfo }) {
+  const [cookies, setCookie] = useCookies(["user"]);
   const [user, setUser] = useState({ ...userInfo });
 
-  const [element, setElement] = useState("");
-  const renderElement = () => {
-    setElement((prev) => {
-      return (
-        <>
-          {prev}
-          <AddKeyword renderElement={renderElement} />
-        </>
-      );
-    });
-  };
+  const [job, setJob] = useState({
+    job_title: "",
+    job_descrip: "",
+    job_require: "",
+    job_benefit: "",
+    job_place: "",
+    salary: "",
+    date_expire: "",
+    job_keyword: [],
+  });
+
+  const [listKey, setListKey] = useState([
+    {
+      keyword: "",
+      weight: "",
+    },
+  ]);
+
+  const [listWeight, setListWeight] = useState([
+    { id: 1, name: "Very Low" },
+    { id: 2, name: "Low" },
+    { id: 3, name: "Medium" },
+    { id: 4, name: "High" },
+    { id: 5, name: "Very High" },
+  ]);
 
   useEffect(() => {
     if (userInfo.info) {
@@ -63,6 +39,49 @@ function AddJob({ userInfo }) {
     }
   }, [userInfo]);
 
+  const addKeyword = (e) => {
+    e.preventDefault();
+    if (listKey.length >= 10) {
+      alert("You can only add 10 keywords");
+      return;
+    }
+    setListKey([...listKey, { keyword: "", weight: "" }]);
+  };
+
+  const removeKeyword = (index) => {
+    let newListKey = [...listKey];
+    newListKey.splice(index, 1);
+    setListKey(newListKey);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let form = new FormData();
+    form.append("job_title", job.job_title);
+    form.append("job_descrip", job.job_descrip);
+    form.append("job_require", job.job_require);
+    form.append("job_benefit", job.job_benefit);
+    form.append("job_place", job.job_place);
+    form.append("salary", job.salary);
+    form.append("date_expire", job.date_expire);
+    form.append("job_keyword", JSON.stringify(listKey));
+
+    fetch(
+      `${process.env.REACT_APP_API_URL}/recruiter/job/add?api_token=${cookies.user}`,
+      {
+        method: "POST",
+        body: form,
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          alert(data.message);
+          window.location.reload();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="m-2 relative">
       <h2 className="text-xl mb-4">
@@ -71,7 +90,7 @@ function AddJob({ userInfo }) {
         <span className="font-bold">Add New Job</span>
       </h2>
       <hr />
-      <form className="my-4">
+      <form className="my-4" onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4" id="formAdd">
           <div className="col-span-1">
             <label className="block text-sm font-bold mb-2">Job Title</label>
@@ -79,6 +98,9 @@ function AddJob({ userInfo }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Job Title"
+              onChange={(e) => {
+                setJob({ ...job, job_title: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-1">
@@ -87,6 +109,9 @@ function AddJob({ userInfo }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Job Require"
+              onChange={(e) => {
+                setJob({ ...job, job_require: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-2">
@@ -96,6 +121,9 @@ function AddJob({ userInfo }) {
             <textarea
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Job Description"
+              onChange={(e) => {
+                setJob({ ...job, job_descrip: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-1">
@@ -104,6 +132,9 @@ function AddJob({ userInfo }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Job Benefit"
+              onChange={(e) => {
+                setJob({ ...job, job_benefit: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-1">
@@ -112,14 +143,20 @@ function AddJob({ userInfo }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               placeholder="Job Place"
+              onChange={(e) => {
+                setJob({ ...job, job_place: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-1">
             <label className="block text-sm font-bold mb-2">Job Salary</label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="number"
+              type="text"
               placeholder="Job Salary"
+              onChange={(e) => {
+                setJob({ ...job, salary: e.target.value });
+              }}
             />
           </div>
           <div className="col-span-1">
@@ -127,44 +164,159 @@ function AddJob({ userInfo }) {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="date"
+              onChange={(e) => {
+                setJob({ ...job, date_expire: e.target.value });
+              }}
             />
           </div>
-          <div className="col-span-2">
-            <div className="flex items-end justify-between">
-              <div className="w-5/12 mr-2">
-                <label className="block text-sm font-bold mb-2">Keyword</label>
-                <select className="w-full p-2 rounded-md">
-                  <option>Select Keyword</option>
-                  <option>Keyword 1</option>
-                  <option>Keyword 2</option>
-                  <option>Keyword 3</option>
-                  <option>Keyword 4</option>
-                  <option>Keyword 5</option>
-                </select>
-              </div>
-              <div className="w-5/12 ml-2">
-                <label className="block text-sm font-bold mb-2">Weight</label>
-                <select className="w-full p-2 rounded-md">
-                  <option>Select Weight</option>
-                  <option>Weight 1</option>
-                  <option>Weight 2</option>
-                  <option>Weight 3</option>
-                  <option>Weight 4</option>
-                  <option>Weight 5</option>
-                </select>
-              </div>
-              <div className="w-2/12 ml-4">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="button"
-                  onClick={renderElement}
-                >
-                  Add
-                </button>
+          {listKey.map((item, index) => (
+            <div key={index} className="col-span-2">
+              <div className="flex items-end justify-between">
+                <div className="w-5/12 mr-2">
+                  <label className="block text-sm font-bold mb-2">
+                    Keyword
+                  </label>
+                  <select
+                    className="w-full p-2 rounded-md"
+                    onChange={(e) =>
+                      setListKey(
+                        listKey.map((item, i) =>
+                          i === index
+                            ? {
+                                ...item,
+                                keyword: e.target.value,
+                              }
+                            : item
+                        )
+                      )
+                    }
+                  >
+                    <option value="---" className="capitalize">
+                      Language
+                    </option>
+                    <option value="java" className="capitalize">
+                      java
+                    </option>
+                    <option value="php" className="capitalize">
+                      php
+                    </option>
+                    <option value="python" className="capitalize">
+                      python
+                    </option>
+                    <option value="swift" className="capitalize">
+                      swift
+                    </option>
+                    <option value="c#" className="capitalize">
+                      c#
+                    </option>
+                    <option value="objectC" className="capitalize">
+                      object-C
+                    </option>
+                    <option value="dart" className="capitalize">
+                      dart
+                    </option>
+                    <option value="reactjs" className="capitalize">
+                      reactjs
+                    </option>
+                    <option value="anglular" className="capitalize">
+                      anglular
+                    </option>
+                    <option value="laravel" className="capitalize">
+                      laravel
+                    </option>
+                    <option value="nodejs" className="capitalize">
+                      nodejs
+                    </option>
+                    <option value="vuejs" className="capitalize">
+                      vuejs
+                    </option>
+                  </select>
+                </div>
+                <div className="w-5/12 ml-2">
+                  <label className="block text-sm font-bold mb-2">Weight</label>
+                  <select
+                    className="w-full p-2 rounded-md"
+                    onChange={(e) => {
+                      setListKey(
+                        listKey.map((item, i) =>
+                          i === index
+                            ? {
+                                ...item,
+                                weight: parseInt(e.target.value),
+                              }
+                            : item
+                        )
+                      );
+                      console.log(listKey);
+                    }}
+                  >
+                    <option value="---" className="capitalize">
+                      Weight
+                    </option>
+                    {listWeight.map((i) => (
+                      <option key={i.id} value={i.id}>
+                        {i.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-2/12 ml-2">
+                  <button
+                    className="hover:text-prihover hover:scale-110 mb-3 mx-2"
+                    onClick={addKeyword}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+
+                  {index > 0 && (
+                    <button
+                      className="hover:text-red-500 hover:scale-110 mb-3 mx-2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        removeKeyword(index);
+                      }}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          {element}
+          ))}
+        </div>
+        <div className="text-center mt-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Add
+          </button>
         </div>
       </form>
     </div>
