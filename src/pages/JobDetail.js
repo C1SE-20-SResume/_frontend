@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-function JobDetail() {
+function JobDetail({ role }) {
   const { id } = useParams();
   const [cookies] = useCookies(["user"]);
 
@@ -20,6 +20,10 @@ function JobDetail() {
       })
       .catch((err) => console.error(err));
   }, [id]);
+
+  useEffect(() => {
+    document.title = `${job.job_title} | Job Detail`;
+  }, [job.job_title]);
 
   const handleUploadCV = (e) => {
     e.preventDefault();
@@ -203,19 +207,21 @@ function JobDetail() {
                   </div>
                 </div>
               </div>
-              <div className="shadow-md bg-gray-100 p-5">
-                <button
-                  className="w-full border border-blue-500 text-black hover:bg-blue-500 hover:text-white font-bold py-3 rounded transition-all duration-300"
-                  onClick={() => setShow(true)}
-                >
-                  <span className="font-bold">Apply</span>
-                </button>
-              </div>
+              {role !== 1 && (
+                <div className="shadow-md bg-gray-100 p-5">
+                  <button
+                    className="w-full border border-blue-500 text-black hover:bg-blue-500 hover:text-white font-bold py-3 rounded transition-all duration-300"
+                    onClick={() => setShow(true)}
+                  >
+                    <span className="font-bold">Apply</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
-      {show && (
+      {role !== 1 && show && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="z-20 bg-white rounded-lg shadow-xl p-5 min-w-[300px] relative">
             <h3 className="text-center">

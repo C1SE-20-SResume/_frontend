@@ -6,6 +6,8 @@ import QuizPer from "./Quiz/QuizPer";
 import ProfileTab from "./Profile/ProfileTab";
 import PasswordTab from "./Profile/PasswordTab";
 import Summary from "./Quiz/Summary";
+import ListJob from "./Recruiter/ListJob";
+import AddJob from "./Recruiter/AddJob";
 
 export {
   Header,
@@ -16,4 +18,6 @@ export {
   ProfileTab,
   PasswordTab,
   Summary,
+  ListJob,
+  AddJob,
 };

@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 import "../Styles/Header.css";
 
-function Header() {
+function Header({ setUserInfo }) {
   const [cookies, setCookie, removeCookies] = useCookies(["token"]);
 
   const [listMenu, setListMenu] = useState(["Home", "Job", "Contact"]);
@@ -17,6 +17,7 @@ function Header() {
         .then((res) => res.json())
         .then((data) => {
           if (data.success) {
+            setUserInfo(data);
             setUser(data.user_info);
             if (data.role_level === 0) {
               setListMenu(["Home", "Job", "Quiz Test", "Contact"]);
@@ -103,11 +104,22 @@ function Header() {
                   listMenu.map((item, index) => (
                     <li
                       key={index}
-                      className="inline-block py-3 px-2.5 mx-2  transition-all duration-150"
+                      className={`inline-block  mx-2  transition-all duration-150
+                      ${
+                        item.replace(/\s/g, "-").toLowerCase() ===
+                        "for-recruiter"
+                          ? ""
+                          : "py-3 px-2.5"
+                      }`}
                     >
                       <NavLink
                         className="hover:text-prihover"
-                        activeClassName="text-prihover"
+                        activeClassName={`${
+                          item.replace(/\s/g, "-").toLowerCase() ===
+                          "for-recruiter"
+                            ? "py-2 px-3 bg-blue-500  rounded-lg border border-blue-500 hover:bg-white font-bold text-white"
+                            : "text-prihover"
+                        }`}
                         to={`/${item.replace(/\s/g, "-").toLowerCase()}`}
                       >
                         {item}
@@ -139,8 +151,11 @@ function Header() {
                   <div className="flex items-center justify-between relative toggle_profile">
                     <span>{user.full_name}</span>
                     <img
-                      // random img avatar
-                      src="https://picsum.photos/200"
+                      src={
+                        user.logo_url
+                          ? user.logo_url
+                          : "https://picsum.photos/200"
+                      }
                       alt={user.full_name}
                       className="rounded-full ml-2 max-w-[50px] cursor-pointer"
                     />

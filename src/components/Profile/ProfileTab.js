@@ -7,7 +7,7 @@ function ProfileTab({ user }) {
         <span className="font-bold">Profile</span>
       </h2>
       <hr />
-      <form>
+      <form className="mb-5">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="col-span-1 mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -72,54 +72,63 @@ function ProfileTab({ user }) {
           </button>
         </div>
       </form>
-      <hr />
-      <div className="mt-5">
-        <h3 className="text-lg">
-          <span className="font-bold">Table Score</span>
-        </h3>
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="pb-3">
-                <span className="font-bold">Type</span>
-              </th>
-              <th className="pb-3">
-                <span className="font-bold">Score</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border">
-              <td className="px-3 py-2">
-                <span className="font-bold">Aptitude Score</span>
-              </td>
-              <td className="text-center">
-                <span
-                  className={`${!user.info.apptitude_score && "text-red-500"}`}
-                >
-                  {user.info.apptitude_score ? user.info.apptitude_score : NaN}
-                </span>
-              </td>
-            </tr>
-            <tr className="border border-t-0">
-              <td className="px-3 py-2">
-                <span className="font-bold">Personality Score</span>
-              </td>
-              <td className="text-center">
-                <span
-                  className={`${
-                    !user.info.personality_score && "text-red-500"
-                  }`}
-                >
-                  {user.info.personality_score
-                    ? user.info.personality_score
-                    : NaN}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+      {user.role === 0 && (
+        <>
+          <hr />
+          <div className="mt-5">
+            <h3 className="text-lg">
+              <span className="font-bold">Table Score</span>
+            </h3>
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th className="pb-3">
+                    <span className="font-bold">Type</span>
+                  </th>
+                  <th className="pb-3">
+                    <span className="font-bold">Score</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border">
+                  <td className="px-3 py-2">
+                    <span className="font-bold">Aptitude Score</span>
+                  </td>
+                  <td className="text-center">
+                    <span
+                      className={`${
+                        !user.info.apptitude_score && "text-red-500"
+                      }`}
+                    >
+                      {user.info.apptitude_score
+                        ? user.info.apptitude_score
+                        : NaN}
+                    </span>
+                  </td>
+                </tr>
+                <tr className="border border-t-0">
+                  <td className="px-3 py-2">
+                    <span className="font-bold">Personality Score</span>
+                  </td>
+                  <td className="text-center">
+                    <span
+                      className={`${
+                        !user.info.personality_score && "text-red-500"
+                      }`}
+                    >
+                      {user.info.personality_score
+                        ? user.info.personality_score
+                        : NaN}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   );
 }

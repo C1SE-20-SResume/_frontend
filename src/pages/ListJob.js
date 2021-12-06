@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function ListJob() {
+function ListJob({ role, title }) {
   const [listJob, setListJob] = useState([]);
 
   const [perPage, setPerPage] = useState({
@@ -18,6 +18,10 @@ function ListJob() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
   return (
     <main>
@@ -172,7 +176,9 @@ function ListJob() {
                                         d="M17 8l4 4m0 0l-4 4m4-4H3"
                                       />
                                     </svg>
-                                    <span className="ml-2">Apply Now</span>
+                                    <span className="ml-2">
+                                      {role !== 1 ? "Apply Now" : "See Detail"}
+                                    </span>
                                   </span>
                                 </li>
                               </ul>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function Home() {
+function Home({ role, title }) {
   const [listJob, setListJob] = useState([]);
 
   useEffect(() => {
@@ -12,6 +12,11 @@ function Home() {
       })
       .catch((err) => console.error(err));
   }, []);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
   return (
     <main>
       <section className="py-10">
@@ -149,7 +154,9 @@ function Home() {
                                 d="M17 8l4 4m0 0l-4 4m4-4H3"
                               />
                             </svg>
-                            <span className="ml-2">Apply Now</span>
+                            <span className="ml-2">
+                              {role !== 1 ? "Apply Now" : "See Detail"}
+                            </span>
                           </span>
                         </li>
                       </ul>
@@ -161,7 +168,7 @@ function Home() {
 
           <div className="text-center my-6">
             <Link to="/job">
-              <button className="py-2 px-6 border-2 text-prihover border-black hover:border-prihover hover:bg-prihover hover:text-white transition-all duration-300 rounded-lg uppercase font-semibold">
+              <button className="py-2 px-6 border-2 text-prihover border-prihover hover:border-prihover hover:bg-prihover hover:text-white transition-all duration-300 rounded-lg uppercase font-semibold">
                 Load More
               </button>
             </Link>

@@ -1,10 +1,10 @@
 import React from "react";
 import { Header, Footer } from "../components";
 
-function Main({ children }) {
+function Main({ children, setUserInfo }) {
   return (
     <>
-      <Header />
+      <Header setUserInfo={setUserInfo} />
       <main>{children}</main>
       <Footer />
     </>

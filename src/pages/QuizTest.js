@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { QuizAp, Start } from "../components";
 
-function QuizTest() {
+function QuizTest({ title }) {
   const [start, setStart] = useState(false);
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
 
   return (
     <>

@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
 
 import { ProfileTab, PasswordTab } from "../components";
 
-function Profile() {
+function Profile({ userInfo, title }) {
   const [user, setUser] = useState({
-    info: {
-      full_name: "",
-    },
-    role: 0,
-    user_id: 0,
+    info: { ...userInfo.user_info },
+    role: userInfo.role_level,
+    user_id: userInfo.user_id,
   });
 
-  const [cookies] = useCookies(["user"]);
+  useEffect(() => {
+    if (userInfo.user_info) {
+      setUser({
+        info: userInfo.user_info,
+        role: userInfo.role_level,
+        user_id: userInfo.user_id,
+      });
+    }
+  }, [userInfo]);
 
   const [tab, setTab] = useState("profile");
 
@@ -31,19 +36,8 @@ function Profile() {
   };
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setUser({
-            info: data.user_info,
-            role: data.role_level,
-            user_id: data.user_id,
-          });
-        }
-      })
-      .catch((err) => console.error(err));
-  }, [cookies.user]);
+    document.title = title;
+  }, [title]);
 
   return (
     <main>
