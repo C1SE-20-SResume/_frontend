@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ListJob, AddJob, EditJob } from "../components";
+import {
+  ListJob,
+  AddJob,
+  EditJob,
+  AddQuestion,
+  ListQuestion,
+} from "../components";
 
 function Recruiter({ userInfo, title }) {
   const [user, setUser] = useState({
@@ -25,12 +31,14 @@ function Recruiter({ userInfo, title }) {
 
   const renderTab = () => {
     switch (tab) {
-      case "list-job":
-        return <ListJob userInfo={user} />;
+      case "add-question":
+        return <AddQuestion userInfo={user} />;
       case "add-job":
         return <AddJob userInfo={user} />;
       case "edit-job":
         return <EditJob />;
+      case "list-question":
+        return <ListQuestion />;
       default:
         return <ListJob userInfo={user} />;
     }

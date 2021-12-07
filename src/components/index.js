@@ -9,6 +9,8 @@ import Summary from "./Quiz/Summary";
 import ListJob from "./Recruiter/ListJob";
 import AddJob from "./Recruiter/AddJob";
 import EditJob from "./Recruiter/EditJob";
+import AddQuestion from "./Recruiter/Question/AddQuestion";
+import ListQuestion from "./Recruiter/Question/ListQuestion";
 
 export {
   Header,
@@ -22,4 +24,6 @@ export {
   ListJob,
   AddJob,
   EditJob,
+  AddQuestion,
+  ListQuestion,
 };
