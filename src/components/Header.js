@@ -31,9 +31,7 @@ function Header({ setUserInfo }) {
   }, [cookies.user]);
 
   const handleLogout = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/logout?api_token=${cookies.user}`, {
-      method: "POST",
-    })
+    fetch(`${process.env.REACT_APP_API_URL}/logout?api_token=${cookies.user}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -140,7 +138,7 @@ function Header({ setUserInfo }) {
                   <div className="inline-block py-3 px-2.5">
                     <Link
                       className="border border-prihover rounded-md py-2 px-3 bg-prihover text-white hover:bg-white hover:text-black"
-                      to="/signup"
+                      to="/register"
                     >
                       Signup
                     </Link>

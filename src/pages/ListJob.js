@@ -35,8 +35,8 @@ function ListJob({ role, title }) {
             </p>
           </div>
           <div className="flex">
-            <div className="md:w-1/4 w-full"></div>
-            <div className="md:w-3/4 w-full">
+            {/* <div className="md:w-1/4 w-full"></div> */}
+            <div className="w-full">
               <div className="p-6 ml-6">
                 {listJob.length > 0 &&
                   listJob.map((job, index) => {

@@ -14,8 +14,9 @@ import {
   QuizTest,
   Profile,
   Recruiter,
+  VerifyNotice,
 } from "./pages";
-import { Login } from "./auth";
+import { Login, Register } from "./auth";
 
 function App() {
   const [cookies] = useCookies(["user"]);
@@ -31,11 +32,14 @@ function App() {
               <Auth>
                 <Switch>
                   <Route exact path="/login" component={Login} />
+                  <Route exact path="/register" component={Register} />
                 </Switch>
               </Auth>
             </Route>
           )}
-
+          {cookies.user ?? (
+            <Route path="/email/verify/success" component={VerifyNotice} />
+          )}
           <Route>
             <Main setUserInfo={setUserInfo}>
               <Switch>

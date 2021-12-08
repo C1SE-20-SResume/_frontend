@@ -19,7 +19,7 @@ function ListQuestion() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setAptitude(data.apptitude);
+          setAptitude(data.aptitude);
           setPersonality(data.personality);
           setInfo({
             company_name: data.company_name,
