@@ -99,11 +99,11 @@ function ProfileTab({ user }) {
                   <td className="text-center">
                     <span
                       className={`${
-                        !user.info.apptitude_score && "text-red-500"
+                        !user.info.aptitude_score && "text-red-500"
                       }`}
                     >
-                      {user.info.apptitude_score
-                        ? user.info.apptitude_score
+                      {user.info.aptitude_score
+                        ? user.info.aptitude_score
                         : NaN}
                     </span>
                   </td>

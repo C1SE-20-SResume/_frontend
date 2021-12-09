@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { QuizAp, Start } from "../components";
 
 function QuizTest({ title }) {
@@ -36,7 +36,7 @@ function QuizTest({ title }) {
         </div>
       </div>
       <div className="container pb-[120px]">
-        <div className="w-full bg-[#faf0fc] shadow-lg rounded-lg">
+        <div className="w-full bg-[#faf0fc] shadow-lg rounded-lg p-8">
           {start ? <QuizAp /> : <Start setStart={setStart} />}
         </div>
       </div>

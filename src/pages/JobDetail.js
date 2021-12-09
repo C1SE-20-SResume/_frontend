@@ -25,12 +25,17 @@ function JobDetail({ role }) {
     document.title = `${job.job_title} | Job Detail`;
   }, [job.job_title]);
 
-  const handleUploadCV = (e) => {
+  const handleUploadCV = (e, value) => {
     e.preventDefault();
     e.target.disabled = true;
     const formData = new FormData();
-    formData.append("cv_file", e.target.files[0]);
     formData.append("job_id", id);
+
+    if (!value) {
+      formData.append("cv_new", value);
+    } else {
+      formData.append("cv_file", e.target.files[0]);
+    }
 
     fetch(
       `${process.env.REACT_APP_API_URL}/candidate/job/upload?api_token=${cookies.user}`,
@@ -49,6 +54,22 @@ function JobDetail({ role }) {
         } else {
           alert(data.message);
           window.location.reload();
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const [existCV, setExistCV] = useState(false);
+
+  const checkCV = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/candidate/apply/check?api_token=${cookies.user}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setExistCV(data.applied);
+          setShow(true);
         }
       })
       .catch((err) => console.error(err));
@@ -211,7 +232,16 @@ function JobDetail({ role }) {
                 <div className="shadow-md bg-gray-100 p-5">
                   <button
                     className="w-full border border-blue-500 text-black hover:bg-blue-500 hover:text-white font-bold py-3 rounded transition-all duration-300"
-                    onClick={() => setShow(true)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (role === 0) {
+                        checkCV();
+                      } else {
+                        alert(
+                          "You are not a candidate, login as a candidate to apply this job"
+                        );
+                      }
+                    }}
                   >
                     <span className="font-bold">Apply</span>
                   </button>
@@ -221,7 +251,7 @@ function JobDetail({ role }) {
           </div>
         </div>
       </section>
-      {role !== 1 && show && (
+      {role === 0 && show && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="z-20 bg-white rounded-lg shadow-xl p-5 min-w-[300px] relative">
             <h3 className="text-center">
@@ -236,12 +266,19 @@ function JobDetail({ role }) {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   type="file"
                   placeholder="Upload CV"
-                  onChange={handleUploadCV}
+                  onChange={(e) => handleUploadCV(e, true)}
                 />
-                <p>Or</p>
-                <button className="w-full border border-blue-500 text-black hover:bg-blue-500 hover:text-white font-bold py-3 rounded transition-all duration-300">
-                  <span className="font-bold">Use existing CV</span>
-                </button>
+                {existCV && (
+                  <>
+                    <p>Or</p>
+                    <button
+                      className="w-full border border-blue-500 text-black hover:bg-blue-500 hover:text-white font-bold py-3 rounded transition-all duration-300"
+                      onClick={(e) => handleUploadCV(e, false)}
+                    >
+                      <span className="font-bold">Use existing CV</span>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <button

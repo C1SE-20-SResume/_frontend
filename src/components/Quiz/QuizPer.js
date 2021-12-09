@@ -64,7 +64,7 @@ function QuizPer({ person, aptitudeScore }) {
       .then((data) => {
         if (data.success) {
           setMessage(data.message);
-          setResult(...data.ques_result);
+          setResult(data);
         } else {
         }
       })
@@ -72,8 +72,6 @@ function QuizPer({ person, aptitudeScore }) {
         console.log(err);
       });
   };
-
-  console.log(message);
 
   return (
     <>

@@ -14,7 +14,9 @@ function ListJob({ role, title }) {
     fetch(`${process.env.REACT_APP_API_URL}/job`)
       .then((res) => res.json())
       .then((data) => {
-        setListJob(data.data);
+        if (data.success) {
+          setListJob(data.data.filter((job) => job.expired === false));
+        }
       })
       .catch((err) => console.error(err));
   }, []);

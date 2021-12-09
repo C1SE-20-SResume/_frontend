@@ -11,6 +11,8 @@ function Header({ setUserInfo }) {
 
   const [user, setUser] = useState({});
 
+  const [navMenu, setNavMenu] = useState(false);
+
   useEffect(() => {
     if (cookies.user) {
       fetch(`${process.env.REACT_APP_API_URL}/login?api_token=${cookies.user}`)
@@ -92,11 +94,11 @@ function Header({ setUserInfo }) {
                 <img
                   src={Logo}
                   alt="logo"
-                  className="max-w-[200px] h-auto mr-2"
+                  className="md:max-w-[200px] max-w-[90px] h-auto mr-2"
                 />
               </Link>
             </div>
-            <nav className="">
+            <nav className="md:block hidden">
               <ul className="w-full flex items-center justify-center">
                 {listMenu.length > 0 &&
                   listMenu.map((item, index) => (
@@ -126,7 +128,7 @@ function Header({ setUserInfo }) {
                   ))}
               </ul>
             </nav>
-            <div className="max-w-full lg:max-w-[50%]">
+            <div className="md:block hidden max-w-full lg:max-w-[50%]">
               {!cookies.user ? (
                 <>
                   <div className="inline-block py-3 px-2.5">
@@ -203,9 +205,69 @@ function Header({ setUserInfo }) {
                 </div>
               )}
             </div>
+            <div className="md:hidden block">
+              <button
+                className="block md:hidden border border-prihover rounded-md py-2 px-3 bg-prihover text-white hover:bg-white hover:text-black"
+                onClick={() => setNavMenu(true)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      {navMenu && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 h-screen">
+          <div
+            className="w-full h-full bg-black opacity-50 z-50"
+            onClick={() => setNavMenu(false)}
+          />
+          <div className="absolute top-0 left-0 bottom-0 flex flex-col justify-center h-full w-full max-w-[300px] bg-white z-[99]">
+            <ul className="w-full flex flex-col items-center">
+              {listMenu.length > 0 &&
+                listMenu.map((item, index) => (
+                  <li
+                    key={index}
+                    className={`inline-block  mx-2  transition-all duration-150
+                      ${
+                        item.replace(/\s/g, "-").toLowerCase() ===
+                        "for-recruiter"
+                          ? ""
+                          : "py-3 px-2.5"
+                      }`}
+                  >
+                    <NavLink
+                      className="hover:text-prihover uppercase font-semibold"
+                      activeClassName={`${
+                        item.replace(/\s/g, "-").toLowerCase() ===
+                        "for-recruiter"
+                          ? "py-2 px-3 bg-blue-500  rounded-lg border border-blue-500 hover:bg-white font-bold text-white"
+                          : "text-prihover"
+                      }`}
+                      to={`/${item.replace(/\s/g, "-").toLowerCase()}`}
+                      onClick={() => setNavMenu(false)}
+                    >
+                      {item}
+                    </NavLink>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
