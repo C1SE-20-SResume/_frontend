@@ -14,6 +14,7 @@ function AddJob({ userInfo }) {
     salary: "",
     date_expire: "",
     job_keyword: [],
+    work_time: "f",
   });
 
   const [listKey, setListKey] = useState([
@@ -65,6 +66,7 @@ function AddJob({ userInfo }) {
     form.append("salary", job.salary);
     form.append("date_expire", job.date_expire);
     form.append("job_keyword", JSON.stringify(listKey));
+    form.append("work_time", job.work_time);
 
     fetch(
       `${process.env.REACT_APP_API_URL}/recruiter/job/add?api_token=${cookies.user}`,
@@ -168,6 +170,19 @@ function AddJob({ userInfo }) {
                 setJob({ ...job, date_expire: e.target.value });
               }}
             />
+          </div>
+          <div className="col-span-1">
+            <label className="block text-sm font-bold mb-2">Work Time</label>
+            <select
+              className="w-full p-2 rounded-md"
+              onChange={(e) => {
+                console.log();
+                setJob({ ...job, work_time: e.target.value });
+              }}
+            >
+              <option value="f">Full Time</option>
+              <option value="p">Part Time</option>
+            </select>
           </div>
           {listKey.map((item, index) => (
             <div key={index} className="col-span-2">
