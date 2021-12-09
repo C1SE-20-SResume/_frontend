@@ -7,10 +7,10 @@ function VerifyNotice() {
     setNumber((prev) => prev - 1);
   }, 1000);
 
-  // redirect to home page after 3 seconds
+  // redirect to login page after 3 seconds
   if (number === 0) {
     clearInterval(countDown);
-    window.location.href = "/";
+    window.location.href = "/login";
   }
 
   return (

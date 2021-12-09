@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Validator } from "../Store";
+import { Link } from "react-router-dom";
 import "../Styles/Login.css";
 
 function Login() {
@@ -96,12 +97,21 @@ function Login() {
                   <span className="form-message text-red-500 text-sm"></span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                  >
-                    Sign In
-                  </button>
+                  <div>
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+                      type="submit"
+                    >
+                      Sign In
+                    </button>
+                    or
+                    <Link
+                      to="/register"
+                      className="text-blue-500 hover:text-blue-700 ml-2"
+                    >
+                      <span>Sign Up</span>
+                    </Link>
+                  </div>
                   <a
                     className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                     href="/"
@@ -114,6 +124,26 @@ function Login() {
           </div>
         </div>
       </div>
+      <Link
+        to="/home"
+        className="absolute top-4 left-4 border border-prihover bg-white py-2 px-4 rounded-xl hover:bg-prihover hover:text-white flex items-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M7 16l-4-4m0 0l4-4m-4 4h18"
+          />
+        </svg>
+        <span className="ml-2">Back to Home</span>
+      </Link>
     </div>
   );
 }
