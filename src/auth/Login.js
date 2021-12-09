@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Validator } from "../Store";
 import "../Styles/Login.css";
 
 function Login() {
   const [cookies, setCookie] = useCookies(["user"]);
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     Validator({
@@ -23,6 +25,7 @@ function Login() {
   });
 
   const handleSubmit = (event) => {
+    console.log(message);
     event.preventDefault();
     const email = event.target.email.value;
     const password = event.target.password.value;
@@ -41,11 +44,11 @@ function Login() {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.success) {
+          if (data.success && data.api_token) {
             setCookie("user", data.api_token);
             window.location.href = "/";
           } else {
-            // alert(data.message);
+            setMessage(data.message);
           }
         })
         .catch((err) => {
@@ -74,7 +77,11 @@ function Login() {
                     type="email"
                     placeholder="Email"
                   />
-                  <span className="form-message"></span>
+
+                  <span className="form-message text-red-500 text-sm"></span>
+                  <span className="text-red-500 text-sm">
+                    {message !== "" && message}
+                  </span>
                 </div>
                 <div className="mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -86,7 +93,7 @@ function Login() {
                     type="password"
                     placeholder="Password"
                   />
-                  <span className="form-message"></span>
+                  <span className="form-message text-red-500 text-sm"></span>
                 </div>
                 <div className="flex items-center justify-between">
                   <button

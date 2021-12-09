@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import validator from "validator";
 
 function Register() {
   const [user, setUser] = useState({
     full_name: "",
     email: "",
     password: "",
-    gender: "",
+    gender: "f",
     date_birth: "",
     phone_number: "",
+  });
+
+  const [validate, setValidate] = useState({
+    full_name: true,
+    email: true,
+    password: true,
+    gender: true,
+    date_birth: true,
+    phone_number: true,
+    confirm_password: true,
   });
 
   const [assetToken, setAssetToken] = useState("");
@@ -25,23 +36,57 @@ function Register() {
       date_birth: date,
       gender: gender,
     }));
+    let checkUser = Object.values(user).every((item) => item !== "");
 
-    console.log(user);
+    let checkValidate = Object.values(validate).every((item) => item === true);
 
-    fetch(`${process.env.REACT_APP_API_URL}/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(user),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success) {
-          setAssetToken(data.access_token);
-        }
+    if (checkValidate && checkUser) {
+      fetch(`${process.env.REACT_APP_API_URL}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
       })
-      .catch((err) => console.log(err));
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setAssetToken(data.access_token);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      Object.keys(user).forEach((key) => {
+        if (user[key] === "") {
+          setValidate((prev) => ({
+            ...prev,
+            [key]: false,
+          }));
+        }
+      });
+    }
+  };
+
+  const handleChange = (value, check, field) => {
+    if (check) {
+      setValidate((prev) => ({
+        ...prev,
+        [field]: true,
+      }));
+      setUser((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    } else {
+      setUser((prev) => ({
+        ...prev,
+        [field]: "",
+      }));
+      setValidate((prev) => ({
+        ...prev,
+        [field]: false,
+      }));
+    }
   };
 
   const handleResend = (e) => {
@@ -89,10 +134,22 @@ function Register() {
                     placeholder="Full Name"
                     name="full_name"
                     onInput={(e) =>
-                      setUser({ ...user, full_name: e.target.value })
+                      handleChange(
+                        e.target.value,
+                        !validator.isEmpty(e.target.value),
+                        "full_name"
+                      )
                     }
                   />
-                  <span className="form-message"></span>
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.full_name ? "" : "Full Name is required"}
+                    {user.full_name &&
+                      validate.full_name &&
+                      !validator.isAlpha(user.full_name, "vi-VN", {
+                        ignore: " ",
+                      }) &&
+                      "Full Name must be alphabet"}
+                  </span>
                 </div>
                 <div className="col-span-1 mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -100,13 +157,23 @@ function Register() {
                   </label>
                   <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="email"
                     type="email"
                     placeholder="Email"
-                    name="email"
-                    onInput={(e) => setUser({ ...user, email: e.target.value })}
+                    onInput={(e) =>
+                      handleChange(
+                        e.target.value,
+                        !validator.isEmpty(e.target.value),
+                        "email"
+                      )
+                    }
                   />
-                  <span className="form-message"></span>
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.email ? "" : "Email is required"}
+                    {user.email &&
+                      validate.email &&
+                      !validator.isEmail(user.email) &&
+                      "Email is invalid"}
+                  </span>
                 </div>
                 <div className="col-span-1 mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -114,15 +181,27 @@ function Register() {
                   </label>
                   <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password"
                     type="password"
                     placeholder="Password"
                     name="password"
                     onInput={(e) =>
-                      setUser({ ...user, password: e.target.value })
+                      handleChange(
+                        e.target.value,
+                        !validator.isEmpty(e.target.value),
+                        "password"
+                      )
                     }
                   />
-                  <span className="form-message"></span>
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.password ? "" : "Password is required"}
+                    {user.password &&
+                      validate.password &&
+                      !validator.isLength(user.password, {
+                        min: 6,
+                        max: undefined,
+                      }) &&
+                      "Password must be at least 6 characters"}
+                  </span>
                 </div>
                 <div className="col-span-1 mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -134,8 +213,30 @@ function Register() {
                     type="password"
                     placeholder="Confirm Password"
                     name="confirm_password"
+                    onInput={(e) => {
+                      if (user.password !== "") {
+                        validator.equals(e.target.value, user.password)
+                          ? setValidate((prev) => ({
+                              ...prev,
+                              confirm_password: true,
+                            }))
+                          : setValidate((prev) => ({
+                              ...prev,
+                              confirm_password: false,
+                            }));
+                      } else {
+                        setValidate((prev) => ({
+                          ...prev,
+                          confirm_password: true,
+                        }));
+                      }
+                    }}
                   />
-                  <span className="form-message"></span>
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.confirm_password
+                      ? ""
+                      : "Confirm Password not match"}
+                  </span>
                 </div>
                 <div className="col-span-2 mb-4 form-group">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -146,7 +247,12 @@ function Register() {
                       <label htmlFor="gender" className="mr-2">
                         Female
                       </label>
-                      <input type="radio" name="gender" value="f" />
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="f"
+                        defaultChecked
+                      />
                     </div>
                     <div className="mr-4">
                       <label htmlFor="gender" className="mr-2">
@@ -161,7 +267,6 @@ function Register() {
                       <input type="radio" name="gender" value="o" />
                     </div>
                   </div>
-                  <span className="form-message"></span>
                 </div>
                 <div className="col-span-1">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -173,7 +278,17 @@ function Register() {
                     type="date"
                     placeholder="Date of Birth"
                     name="date_birth"
+                    onInput={(e) => {
+                      handleChange(
+                        e.target.value,
+                        validator.isDate(e.target.value),
+                        "date_birth"
+                      );
+                    }}
                   />
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.date_birth ? "" : "Date of Birth is required"}
+                  </span>
                 </div>
                 <div className="col-span-1">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -186,9 +301,20 @@ function Register() {
                     placeholder="Phone Number"
                     name="phone_number"
                     onInput={(e) =>
-                      setUser({ ...user, phone_number: e.target.value })
+                      handleChange(
+                        e.target.value,
+                        !validator.isEmpty(e.target.value),
+                        "phone_number"
+                      )
                     }
                   />
+                  <span className="form-message text-sm text-red-500 font-semibold">
+                    {validate.phone_number ? "" : "Format is not valid"}
+                    {user.phone_number &&
+                      validate.phone_number &&
+                      !validator.isMobilePhone(user.phone_number, "vi-VN") &&
+                      "Format is not valid"}
+                  </span>
                 </div>
                 <div className="col-span-2 flex items-center justify-between">
                   <button
@@ -216,7 +342,7 @@ function Register() {
                       If you did not receive the email, please click{" "}
                       <span
                         onClick={handleResend}
-                        className="cursor-pointer text-prihover"
+                        className="cursor-pointer text-prihover text-lgr"
                       >
                         here
                       </span>{" "}
@@ -226,6 +352,13 @@ function Register() {
                 ) : (
                   <p>{message}</p>
                 )}
+                <p>
+                  If you verify your account, click{" "}
+                  <Link to="/login" className="text-prihover text-lg">
+                    here
+                  </Link>{" "}
+                  to login
+                </p>
               </div>
             )}
           </div>
