@@ -66,7 +66,7 @@ function ListQuestion() {
               </button>
             </div>
           </div>
-          <table className="table-fixed w-full">
+          <table className="table-auto w-full">
             <thead>
               <tr>
                 <th className="w-1/5 border px-4 py-2">Type Question</th>
