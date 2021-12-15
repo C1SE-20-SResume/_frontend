@@ -74,7 +74,7 @@ function Summary({ message, result }) {
     if (chartInsApt) {
       chartInsApt.destroy();
     }
-    if (chartAptitude && chartAptitude.current) {
+    if (chartAptitude && chartAptitude.current && kq.aptitude_graph) {
       chartConfigApti.labels = Object.keys(kq.aptitude_graph);
       chartConfigApti.data.datasets = [
         {
@@ -105,13 +105,13 @@ function Summary({ message, result }) {
       );
       setChartInsApt(newChartInstance);
     }
-  }, [chartAptitude]);
+  }, [kq.aptitude_graph, chartAptitude]);
 
   useEffect(() => {
     if (chartInsPerson) {
       chartInsPerson.destroy();
     }
-    if (chartPersonality && chartPersonality.current) {
+    if (chartPersonality && chartPersonality.current && kq.personality_graph) {
       chartConfigPers.labels = Object.keys(kq.personality_graph);
 
       chartConfigPers.data.datasets = [
@@ -152,7 +152,7 @@ function Summary({ message, result }) {
       );
       setChartInsPerson(newChartInstance);
     }
-  }, [chartPersonality]);
+  }, [kq.personality_graph, chartPersonality]);
 
   return (
     <div className="text-center">
